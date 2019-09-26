@@ -6,6 +6,12 @@ use Assert\Assert;
 use Assert\AssertionFailedException;
 use RZ\CanonicalEmail\Exception\EmailNotSupported;
 
+/**
+ * Class GmailStrategy
+ *
+ * @package RZ\CanonicalEmail\Strategy
+ * @see https://support.google.com/mail/answer/10313?hl=fr
+ */
 class GmailStrategy implements CanonizeStrategy
 {
     /**
@@ -39,7 +45,7 @@ class GmailStrategy implements CanonizeStrategy
     public function supportsEmailAddress(string $emailAddress): bool
     {
         if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-            if (preg_match('#\@gmail\.com$#', $emailAddress) === 1) {
+            if (preg_match('#\@(?:gmail|googlemail)\.com$#', $emailAddress) === 1) {
                 return true;
             }
             if ($this->isCheckingMxRecords() && $this->areMailExchangesFromGoogle($emailAddress)) {
@@ -55,6 +61,10 @@ class GmailStrategy implements CanonizeStrategy
             throw EmailNotSupported::fromEmailAddressAndStrategy($emailAddress, static::class);
         }
         $emailAddress = explode('@', $emailAddress);
+        // Force using gmail.com domain
+        if ($emailAddress[1] === 'googlemail.com') {
+            $emailAddress[1] = 'gmail.com';
+        }
         // Gmail ignore user letter case
         $emailAddress[0] = strtolower($emailAddress[0]);
         // Gmail ignores dots and everything after + sign

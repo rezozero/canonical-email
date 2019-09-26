@@ -21,6 +21,7 @@ final class GmailStrategyTest extends TestCase
             ['test@gmail.com', true],
             ['te.st@gmail.com', true],
             ['Te.st@gmail.com', true],
+            ['Te.st@googlemail.com', true],
             ['test+test@gmail.com', true],
             ['test+test@rezo-zero.com', true],
             ['test+test@rezo-zero.dev', true],
@@ -30,6 +31,33 @@ final class GmailStrategyTest extends TestCase
             ['test@hotmail.com', false],
             ['test@google-groups.com', false],
             ['test@roadiz.io', true],
+        ];
+    }
+
+    /**
+     * @dataProvider supportsEmailAddressNoMxProvider
+     */
+    public function testSupportsEmailAddressNoMx(string $email, bool $supported)
+    {
+        $this->assertEquals($supported, (new GmailStrategy(false))->supportsEmailAddress($email));
+    }
+
+    public function supportsEmailAddressNoMxProvider(): array
+    {
+        return [
+            ['test@gmail.com', true],
+            ['te.st@gmail.com', true],
+            ['Te.st@gmail.com', true],
+            ['Te.st@googlemail.com', true],
+            ['test+test@gmail.com', true],
+            ['test+test@rezo-zero.com', false],
+            ['test+test@rezo-zero.dev', false],
+            ['test+test@google.com', false],
+            ['test+test@thehopegallery.com', false],
+            ['test+test@thehope.gallery', false],
+            ['test@hotmail.com', false],
+            ['test@google-groups.com', false],
+            ['test@roadiz.io', false],
         ];
     }
 

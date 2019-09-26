@@ -5,7 +5,7 @@ namespace RZ\CanonicalEmail\Strategy;
 
 use RZ\CanonicalEmail\Exception\EmailNotSupported;
 
-class LowercaseStrategy implements CanonizeStrategy
+class LowercaseDomainStrategy implements CanonizeStrategy
 {
     public function supportsEmailAddress(string $emailAddress): bool
     {
