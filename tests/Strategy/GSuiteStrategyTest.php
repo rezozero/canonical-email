@@ -3,43 +3,44 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use RZ\CanonicalEmail\Exception\EmailNotSupported;
-use RZ\CanonicalEmail\Strategy\GmailStrategy;
+use RZ\CanonicalEmail\Strategy\GSuiteStrategy;
 
-final class GmailStrategyTest extends TestCase
+final class GSuiteStrategyTest extends TestCase
 {
     /**
      * @dataProvider supportsEmailAddressProvider
      */
     public function testSupportsEmailAddress(string $email, bool $supported)
     {
-        $this->assertEquals($supported, (new GmailStrategy())->supportsEmailAddress($email));
+        $this->assertEquals($supported, (new GSuiteStrategy())->supportsEmailAddress($email));
     }
 
     public function supportsEmailAddressProvider(): array
     {
         return [
-            ['test@gmail.com', true],
-            ['te.st@gmail.com', true],
-            ['Te.st@gmail.com', true],
-            ['Te.st@googlemail.com', true],
-            ['test+test@gmail.com', true],
-            ['test+@gmail.com', true],
+            ['test@gmail.com', false],
+            ['Te.st@googlemail.com', false],
+            ['test+test@rezo-zero.com', true],
+            ['test+test@rezo-zero.dev', true],
+            ['test+test@thehopegallery.com', true],
+            ['test+@thehopegallery.com', true],
+            ['test+test@thehope.gallery', true],
             ['test@hotmail.com', false],
             ['test@google-groups.com', false],
-            ['test@roadiz.io', false],
+            ['test@roadiz.io', true],
         ];
     }
 
     /**
-     * @dataProvider getNonGmailAddressProvider
+     * @dataProvider getNonGSuiteAddressProvider
      */
     public function testThrowsEmailNotSupported(string $emailAddress)
     {
         $this->expectException(EmailNotSupported::class);
-        (new GmailStrategy())->getCanonicalEmailAddress($emailAddress);
+        (new GSuiteStrategy())->getCanonicalEmailAddress($emailAddress);
     }
 
-    public function getNonGmailAddressProvider()
+    public function getNonGSuiteAddressProvider()
     {
         return [
             ['test+te.st@test.test'],

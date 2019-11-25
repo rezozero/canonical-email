@@ -3,6 +3,7 @@
     "description": "Simple PHP library to canonize emails address from gmail.com or other providers that allow several forms of email.",
     "type": "library",
     "require": {
+        "php": "^7.0",
         "beberlei/assert": "^3.2"
     },
     "license": "MIT",
