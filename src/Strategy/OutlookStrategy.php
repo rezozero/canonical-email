@@ -6,25 +6,20 @@ use RZ\CanonicalEmail\Exception\EmailNotSupported;
 
 class OutlookStrategy implements CanonizeStrategy
 {
-    public function supportsEmailAddress(string $emailAddress): bool
+    public function supports(string $email, array $mxHosts): bool
     {
-        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-            if (preg_match('#\@outlook\.com$#', $emailAddress) === 1) {
-                return true;
-            }
-        }
-        return false;
+        return preg_match('/@outlook\.com$/i', $email) === 1;
     }
 
     public function getCanonicalEmailAddress(string $emailAddress): string
     {
-        if (!$this->supportsEmailAddress($emailAddress)) {
-            throw EmailNotSupported::fromEmailAddressAndStrategy($emailAddress, static::class);
-        }
-        $emailAddress = explode('@', $emailAddress);
-        // Outlook ignores dots and everything after + sign
-        $emailAddress[0] = preg_replace('#(\+[^@]+)#', '', $emailAddress[0]);
+        // GSuite ignore user letter case
+        $emailAddress = strtolower($emailAddress);
 
-        return implode('@', $emailAddress);
+        [$localPart, $domain] = explode('@', $emailAddress);
+        // Outlook ignores dots and everything after + sign
+        $localPart = preg_replace('/\+.*$/', '', $localPart);
+
+        return $localPart . '@' . $domain;
     }
 }

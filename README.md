@@ -9,8 +9,9 @@ Always store `email` and `canonical_email` in your databases.
 ## Strategies
 
 - `LowercaseDomainStrategy`: for every emails, domain is case insensitive, so it should be lowercased.
-- `GmailStrategy`: for `@gmail.com` addresses or whatever domain which MX servers are from Google GSuite (if `$checkMxRecords` is `true`). This will remove any dots, and any character after `+` sign. Then all email parts will be lowercased. When MX are checked, your app will use PHP `getmxrr` function.
-- `OutlookStrategy`: for `@outlook.com` addresses. This will remove any character after `+` sign.
+- `GmailStrategy`: for `@gmail.com` addresses. This will remove any dots, and any characters after `+` sign.
+- `GSuiteStrategy`: for domains GSuite MX hosts. This will remove any characters after, and including, `+` sign.
+- `OutlookStrategy`: for `@outlook.com` addresses. This will remove any characters after, and including, `+` sign.
 
 ## Usage
 

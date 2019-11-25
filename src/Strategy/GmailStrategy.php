@@ -2,10 +2,6 @@
 
 namespace RZ\CanonicalEmail\Strategy;
 
-use Assert\Assert;
-use Assert\AssertionFailedException;
-use RZ\CanonicalEmail\Exception\EmailNotSupported;
-
 /**
  * Class GmailStrategy
  *
@@ -14,31 +10,24 @@ use RZ\CanonicalEmail\Exception\EmailNotSupported;
  */
 class GmailStrategy implements CanonizeStrategy
 {
-    public function supportsEmailAddress(string $emailAddress): bool
+    public function supports(string $email, array $mxHosts): bool
     {
-        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-            if (preg_match('#\@(?:gmail|googlemail)\.com$#', $emailAddress) === 1) {
-                return true;
-            }
-        }
-        return false;
+        return preg_match('/@(?:gmail|googlemail)\.com$/i', $email) === 1;
     }
 
     public function getCanonicalEmailAddress(string $emailAddress): string
     {
-        if (!$this->supportsEmailAddress($emailAddress)) {
-            throw EmailNotSupported::fromEmailAddressAndStrategy($emailAddress, static::class);
-        }
-        $emailAddress = explode('@', $emailAddress);
-        // Force using gmail.com domain
-        if ($emailAddress[1] === 'googlemail.com') {
-            $emailAddress[1] = 'gmail.com';
-        }
         // Gmail ignore user letter case
-        $emailAddress[0] = strtolower($emailAddress[0]);
-        // Gmail ignores dots and everything after + sign
-        $emailAddress[0] = preg_replace('#(\+[^@]*)|\.#', '', $emailAddress[0]);
+        $emailAddress = strtolower($emailAddress);
+        [$localPart, $domain] = explode('@', $emailAddress);
 
-        return implode('@', $emailAddress);
+        // Force using gmail.com domain
+        if ($domain === 'googlemail.com') {
+            $domain = 'gmail.com';
+        }
+        // Gmail ignores dots and everything after + sign
+        $localPart = preg_replace('/\+.*$|\./', '', $localPart);
+
+        return $localPart . '@' . $domain;
     }
 }

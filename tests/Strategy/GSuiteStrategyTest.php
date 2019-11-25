@@ -12,7 +12,9 @@ final class GSuiteStrategyTest extends TestCase
      */
     public function testSupportsEmailAddress(string $email, bool $supported)
     {
-        $this->assertEquals($supported, (new GSuiteStrategy())->supportsEmailAddress($email));
+        $domain = explode('@', $email)[1];
+        getmxrr($domain, $mxHosts);
+        $this->assertEquals($supported, (new GSuiteStrategy())->supports($email, $mxHosts));
     }
 
     public function supportsEmailAddressProvider(): array
@@ -28,24 +30,6 @@ final class GSuiteStrategyTest extends TestCase
             ['test@hotmail.com', false],
             ['test@google-groups.com', false],
             ['test@roadiz.io', true],
-        ];
-    }
-
-    /**
-     * @dataProvider getNonGSuiteAddressProvider
-     */
-    public function testThrowsEmailNotSupported(string $emailAddress)
-    {
-        $this->expectException(EmailNotSupported::class);
-        (new GSuiteStrategy())->getCanonicalEmailAddress($emailAddress);
-    }
-
-    public function getNonGSuiteAddressProvider()
-    {
-        return [
-            ['test+te.st@test.test'],
-            ['test+te.st.test.test'],
-            ['im not an email']
         ];
     }
 }

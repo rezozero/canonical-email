@@ -5,7 +5,7 @@ namespace RZ\CanonicalEmail\Strategy;
 
 interface CanonizeStrategy
 {
-    public function supportsEmailAddress(string $emailAddress): bool;
+    public function supports(string $email, array $mxHosts): bool;
 
     public function getCanonicalEmailAddress(string $emailAddress): string;
 }

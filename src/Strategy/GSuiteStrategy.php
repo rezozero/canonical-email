@@ -4,7 +4,6 @@ namespace RZ\CanonicalEmail\Strategy;
 
 use Assert\Assert;
 use Assert\AssertionFailedException;
-use RZ\CanonicalEmail\Exception\EmailNotSupported;
 
 /**
  * Class GSuiteStrategy
@@ -27,45 +26,31 @@ class GSuiteStrategy implements CanonizeStrategy
         'alt4.aspmx.l.google.com'
     ];
 
-    public function supportsEmailAddress(string $emailAddress): bool
+    public function supports(string $email, array $mxHosts): bool
     {
-        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-            // Use the GmailStrategy to check gmail.
-            if (preg_match('#\@(?:gmail|googlemail)\.com$#', $emailAddress) === 1) {
-                return false;
-            }
-            return $this->areMailExchangesFromGoogle($emailAddress);
+        // Use the GmailStrategy to check gmail.
+        if (preg_match('/@(?:gmail|googlemail)\.com$/i', $email) === 1) {
+            return false;
         }
-        return false;
+
+        try {
+            Assert::that($mxHosts)->minCount(1);
+            Assert::thatAll($mxHosts)->inArray(static::$googleMxHosts);
+            return true;
+        } catch (AssertionFailedException $e) {
+            return false;
+        }
     }
 
     public function getCanonicalEmailAddress(string $emailAddress): string
     {
-        if (!$this->supportsEmailAddress($emailAddress)) {
-            throw EmailNotSupported::fromEmailAddressAndStrategy($emailAddress, static::class);
-        }
-        $emailAddress = explode('@', $emailAddress);
         // GSuite ignore user letter case
-        $emailAddress[0] = strtolower($emailAddress[0]);
+        $emailAddress = strtolower($emailAddress);
+        [$localPart, $domain] = explode('@', $emailAddress);
+
         // GSuite ignores everything after + sign
-        $emailAddress[0] = preg_replace('#(\+[^@]*)#', '', $emailAddress[0]);
+        $localPart = preg_replace('/\+.*$/', '', $localPart);
 
-        return implode('@', $emailAddress);
-    }
-
-    private function areMailExchangesFromGoogle(string $emailAddress): bool
-    {
-        try {
-            $emailAddress = explode('@', $emailAddress);
-            $domain = $emailAddress[1];
-            if (getmxrr($domain, $mxHosts) === true) {
-                Assert::that($mxHosts)->minCount(1);
-                Assert::thatAll($mxHosts)->inArray(static::$googleMxHosts);
-                return true;
-            }
-            return false;
-        } catch (AssertionFailedException $e) {
-            return false;
-        }
+        return $localPart . '@' . $domain;
     }
 }

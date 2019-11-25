@@ -12,7 +12,8 @@ final class GmailStrategyTest extends TestCase
      */
     public function testSupportsEmailAddress(string $email, bool $supported)
     {
-        $this->assertEquals($supported, (new GmailStrategy())->supportsEmailAddress($email));
+        [, $domain] = explode('@', $email);
+        $this->assertEquals($supported, (new GmailStrategy())->supports($email, []));
     }
 
     public function supportsEmailAddressProvider(): array
@@ -27,24 +28,6 @@ final class GmailStrategyTest extends TestCase
             ['test@hotmail.com', false],
             ['test@google-groups.com', false],
             ['test@roadiz.io', false],
-        ];
-    }
-
-    /**
-     * @dataProvider getNonGmailAddressProvider
-     */
-    public function testThrowsEmailNotSupported(string $emailAddress)
-    {
-        $this->expectException(EmailNotSupported::class);
-        (new GmailStrategy())->getCanonicalEmailAddress($emailAddress);
-    }
-
-    public function getNonGmailAddressProvider()
-    {
-        return [
-            ['test+te.st@test.test'],
-            ['test+te.st.test.test'],
-            ['im not an email']
         ];
     }
 }
