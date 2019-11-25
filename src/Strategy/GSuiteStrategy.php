@@ -29,7 +29,14 @@ class GSuiteStrategy implements CanonizeStrategy
 
     public function supportsEmailAddress(string $emailAddress): bool
     {
-        return filter_var($emailAddress, FILTER_VALIDATE_EMAIL) && $this->areMailExchangesFromGoogle($emailAddress);
+        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+            // Use the GmailStrategy to check gmail.
+            if (preg_match('#\@(?:gmail|googlemail)\.com$#', $emailAddress) === 1) {
+                return false;
+            }
+            return $this->areMailExchangesFromGoogle($emailAddress);
+        }
+        return false;
     }
 
     public function getCanonicalEmailAddress(string $emailAddress): string
