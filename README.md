@@ -1,6 +1,8 @@
 # canonical-email
 Simple PHP library to canonize email addresses from gmail.com, outlook.com or other providers that allow several forms of email.
 
+[![Build Status](https://travis-ci.org/rezozero/canonical-email.svg?branch=master)](https://travis-ci.org/rezozero/canonical-email)
+
 **Be careful: do not store canonical email as primary email for login or sending emails!**    
 Your users may not be able to login again to your site if they used a specific email syntax which differs from canonical. Only store canonical emails in order to test against duplicates and prevent new users from creating multiple accounts with same email using variants.
 
