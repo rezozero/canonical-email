@@ -10,7 +10,7 @@ class LowercaseDomainStrategy implements CanonizeStrategy
     public function supportsEmailAddress(string $emailAddress): bool
     {
         if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-           return true;
+            return true;
         }
         return false;
     }
