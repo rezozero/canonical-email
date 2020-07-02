@@ -21,12 +21,14 @@ composer require rezozero/canonical-email
 ```php
 use RZ\CanonicalEmail\EmailCanonizer;
 use RZ\CanonicalEmail\Strategy\GmailStrategy;
+use RZ\CanonicalEmail\Strategy\GSuiteStrategy;
 use RZ\CanonicalEmail\Strategy\LowercaseStrategy;
 use RZ\CanonicalEmail\Strategy\OutlookStrategy;
 
 $canonizer = new EmailCanonizer([
     new LowercaseDomainStrategy(),
-    new GmailStrategy(true),
+    new GmailStrategy(),
+    new GSuiteStrategy(),
     new OutlookStrategy()
 ]);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use RZ\CanonicalEmail\EmailCanonizer;
 use RZ\CanonicalEmail\Strategy\GmailStrategy;
+use RZ\CanonicalEmail\Strategy\GSuiteStrategy;
 use RZ\CanonicalEmail\Strategy\LowercaseDomainStrategy;
 use RZ\CanonicalEmail\Strategy\OutlookStrategy;
 
@@ -17,6 +18,7 @@ class EmailCanonizerTest extends TestCase
         $canonizer = new EmailCanonizer([
             new LowercaseDomainStrategy(),
             new GmailStrategy(true),
+            new GSuiteStrategy(true),
             new OutlookStrategy()
         ]);
         $this->assertEquals($canonicalEmail, $canonizer->getCanonicalEmailAddress($email));
