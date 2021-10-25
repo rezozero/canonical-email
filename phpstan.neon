@@ -1,3 +1,6 @@
 parameters:
+    level: max
+    paths:
+        - src
     reportUnmatchedIgnoredErrors: false
     checkMissingIterableValueType: false

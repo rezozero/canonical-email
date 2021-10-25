@@ -4,10 +4,11 @@ php:
     - 7.2
     - 7.3
     - 7.4
+    - 8.0
 install:
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev --no-interaction
 script:
-    - php vendor/bin/phpunit --bootstrap vendor/autoload.php tests/
-    - php vendor/bin/phpcbf -p
-    - php vendor/bin/phpstan analyse -c phpstan.neon -l max src
+    - php -d memory_limit=-1 vendor/bin/phpunit --bootstrap vendor/autoload.php tests/
+    - php -d memory_limit=-1 vendor/bin/phpcbf -p
+    - php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon
