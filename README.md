@@ -24,7 +24,7 @@ composer require rezozero/canonical-email
 use RZ\CanonicalEmail\EmailCanonizer;
 use RZ\CanonicalEmail\Strategy\GmailStrategy;
 use RZ\CanonicalEmail\Strategy\GSuiteStrategy;
-use RZ\CanonicalEmail\Strategy\LowercaseStrategy;
+use RZ\CanonicalEmail\Strategy\LowercaseDomainStrategy;
 use RZ\CanonicalEmail\Strategy\OutlookStrategy;
 
 $canonizer = new EmailCanonizer([
