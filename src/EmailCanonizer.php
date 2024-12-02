@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RZ\CanonicalEmail;
@@ -7,14 +8,9 @@ use RZ\CanonicalEmail\Strategy\CanonizeStrategy;
 
 class EmailCanonizer implements CanonizeStrategy
 {
-    /**
-     * @var array
-     */
-    private $strategies = [];
+    private array $strategies = [];
 
     /**
-     * EmailCanonizer constructor.
-     *
      * @param array $strategies
      */
     public function __construct(array $strategies)
@@ -24,10 +20,7 @@ class EmailCanonizer implements CanonizeStrategy
 
     public function supportsEmailAddress(string $emailAddress): bool
     {
-        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-            return true;
-        }
-        return false;
+        return false !== filter_var($emailAddress, FILTER_VALIDATE_EMAIL);
     }
 
     public function getCanonicalEmailAddress(string $emailAddress): string

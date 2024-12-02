@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RZ\CanonicalEmail\Strategy;
 
 use Assert\Assert;
@@ -7,17 +9,11 @@ use Assert\AssertionFailedException;
 use RZ\CanonicalEmail\Exception\EmailNotSupported;
 
 /**
- * Class GSuiteStrategy
- *
- * @package RZ\CanonicalEmail\Strategy
  * @see https://support.google.com/mail/answer/10313?hl=fr
  */
 class GSuiteStrategy implements CanonizeStrategy
 {
-    /**
-     * @var array
-     */
-    private static $googleMxHosts = [
+    private static array $googleMxHosts = [
         'aspmx.l.google.com',
         'aspmx2.googlemail.com',
         'aspmx3.googlemail.com',
@@ -60,7 +56,7 @@ class GSuiteStrategy implements CanonizeStrategy
             $domain = $emailAddress[1];
             if (getmxrr($domain, $mxHosts) === true) {
                 Assert::that($mxHosts)->minCount(1);
-                Assert::thatAll($mxHosts)->inArray(static::$googleMxHosts);
+                Assert::thatAll($mxHosts)->inArray(self::$googleMxHosts);
                 return true;
             }
             return false;

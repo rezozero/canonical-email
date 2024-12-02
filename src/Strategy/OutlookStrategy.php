@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RZ\CanonicalEmail\Strategy;
 
 use RZ\CanonicalEmail\Exception\EmailNotSupported;
