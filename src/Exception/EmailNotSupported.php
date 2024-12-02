@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RZ\CanonicalEmail\Exception;
@@ -12,7 +13,7 @@ class EmailNotSupported extends \InvalidArgumentException
      * @param int $code
      * @param Throwable|null $previous
      */
-    final public function __construct($message = "", $code = 0, Throwable $previous = null)
+    final public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
@@ -23,7 +24,7 @@ class EmailNotSupported extends \InvalidArgumentException
      *
      * @return static
      */
-    public static function fromEmailAddressAndStrategy(string $emailAddress, string $strategyClass)
+    public static function fromEmailAddressAndStrategy(string $emailAddress, string $strategyClass): EmailNotSupported
     {
         return new static(sprintf('Email %s is not supported by %s strategy.', $emailAddress, $strategyClass));
     }

@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RZ\CanonicalEmail\Strategy;
 
-use Assert\Assert;
-use Assert\AssertionFailedException;
 use RZ\CanonicalEmail\Exception\EmailNotSupported;
 
 /**
- * Class GmailStrategy
- *
- * @package RZ\CanonicalEmail\Strategy
  * @see https://support.google.com/mail/answer/10313?hl=fr
  */
 class GmailStrategy implements CanonizeStrategy
